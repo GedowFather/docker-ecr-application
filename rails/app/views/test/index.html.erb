@@ -1,0 +1,9 @@
+This is test page.<br>
+<br>
+CPU Type = <%= `grep "model name" /proc/cpuinfo | head -1` %><br>
+<br>
+List of environments and secrets.<br>
+ENV (environments)     = <%= ENV.fetch('ENV', 'development') %><br>
+DB_HOST (environments) = <%= ENV.fetch('DB_HOST', 'localhost') %><br>
+DB_PASSWORD (secrets)  = <%= ENV.fetch('DB_PASSWORD', 'password') %><br>
+
