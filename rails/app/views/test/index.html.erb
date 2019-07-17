@@ -1,15 +1,14 @@
-This is test page.
+===== This is test page =====
 
 Hostname = <%= `hostname` %>
 CPU Type = <%= `grep "model name" /proc/cpuinfo | head -1` %>
 
-Memory (free)
+----- Memory (free) -----
 <%= `free` %>
 
-IP Address (ip a)
+----- IP Address (ip a) -----
 <%= `ip a` %>
 
-List of environments and secrets.
-  ENV (environments)     = <%= ENV.fetch('ENV', 'development') %>
-  DB_HOST (environments) = <%= ENV.fetch('DB_HOST', 'localhost') %>
-  DB_PASSWORD (secrets)  = <%= ENV.fetch('DB_PASSWORD', 'password') %>
+----- List of environments -----
+<%= `env | sort` %>
+
