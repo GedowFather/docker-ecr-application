@@ -1,6 +1,13 @@
 #/bin/sh
 
 #
+# Config
+#
+BASE_URL="http://169.254.169.254/latest/meta-data/"
+AZ_URL="${BASE_URL}placement/availability-zone"
+REGION=$(curl -s $AZ_URL | sed -e 's/.$//')
+
+#
 # Options
 #
 exit_usage() {
@@ -49,6 +56,21 @@ echo "Checking COMMAND option."
 if [ ! -z "$COMMAND" ]; then
     echo "Starting COMMAND ($COMMAND)"
     ${COMMAND} &
+fi
+
+#
+# Environment
+#
+echo "Getting environment variables."
+ENV=${ENV:-None}
+SSM_PREFIX="/app/$ENV/"
+SSM_QUERY='.Parameters| .[] | "export " + .Name + "=" + .Value'
+
+if [ "$ENV" != "None" ]; then
+    echo "Starting command aws ssm, and exporting envs."
+    $(aws ssm get-parameters-by-path --with-decryption --path "${SSM_PREFIX}" --region "${REGION}" \
+    | jq -r "${SSM_QUERY}" \
+    | sed -e "s~${SSM_PREFIX}~~")
 fi
 
 #
